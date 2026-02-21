@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Roulette Predictor Pro",
+  "version": "3.1.0",
+  "description": "12-strategy + Q-AI prediction tool. Manual input only. Persistent window stays open when clicking your simulator.",
+  "permissions": ["storage", "windows"],
+  "action": {
+    "default_popup": "",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Roulette Predictor Pro"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

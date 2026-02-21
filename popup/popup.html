@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Roulette Predictor Pro</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-main">
+    <div class="hdr-logo">🎯 ROULETTE PREDICTOR PRO</div>
+    <div class="hdr-sub">12 STRATEGIES + Q-AI · MANUAL INPUT · PERSISTENT WINDOW</div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-big" id="hdr-count">0</div>
+    <div class="hdr-lbl">SPINS IN</div>
+  </div>
+  <button id="close-btn" class="close-btn" title="Close window">✕</button>
+</div>
+
+<!-- INPUT ZONE -->
+<div class="input-zone">
+  <div class="iz-label">CLICK NUMBER OR TYPE BELOW — PRESS ADD OR ENTER TO RECORD</div>
+  <div class="numpad" id="numpad"></div>
+  <div class="quick-row">
+    <input id="num-input" class="num-input" type="number" min="0" max="36"
+           placeholder="0–36" autocomplete="off" />
+    <button id="add-btn"     class="add-btn">ADD</button>
+    <button id="predict-btn" class="predict-btn">🔮 PREDICT</button>
+    <button id="undo-btn"    class="undo-btn">↩ UNDO</button>
+    <button id="clear-btn"   class="clear-btn">🗑 CLEAR</button>
+  </div>
+  <div class="hstrip" id="hstrip">
+    <span class="hstrip-empty" id="hstrip-empty">Enter winning numbers from your simulator to begin…</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab tab-on" data-pane="predict">PREDICT</button>
+  <button class="tab" data-pane="strategies">STRATEGIES</button>
+  <button class="tab" data-pane="ai">AI AGENT</button>
+  <button class="tab" data-pane="analysis">ANALYSIS</button>
+  <button class="tab" data-pane="history">HISTORY</button>
+</div>
+
+<!-- ══ PREDICT PANE ══ -->
+<div class="pane pane-on" id="pane-predict">
+  <div id="pred-need" class="need-more">
+    📊 Enter at least <strong>5 winning numbers</strong> then press <strong>🔮 PREDICT</strong>.<br>
+    More numbers = better accuracy across all 12 strategy algorithms.
+  </div>
+  <div id="pred-content" style="display:none">
+    <div class="pred-status-bar">
+      <div class="pred-dot"></div>
+      <span id="pred-status-text" class="pred-status-text">—</span>
+      <span id="pred-status-time" class="pred-status-time"></span>
+    </div>
+    <div class="consensus-bar">
+      <div class="cb-cell">
+        <div class="cb-lbl">CONSENSUS PICKS</div>
+        <div class="cb-val gold" id="cb-count">—</div>
+      </div>
+      <div class="cb-cell">
+        <div class="cb-lbl">WIN COVERAGE</div>
+        <div class="cb-val cyan" id="cb-cov">—<span class="pct-sign">%</span></div>
+      </div>
+      <div class="cb-cell">
+        <div class="cb-lbl">ACTIVE STRATEGIES</div>
+        <div class="cb-val green" id="cb-active">—</div>
+      </div>
+      <div class="cb-cell">
+        <div class="cb-lbl">AI CONFIDENCE</div>
+        <div class="cb-val purple" id="cb-ai">—</div>
+      </div>
+    </div>
+    <div class="sec-label">TOP PREDICTED NUMBERS — MULTI-STRATEGY CONSENSUS</div>
+    <div class="pred-grid" id="pred-grid"></div>
+    <div class="sec-label">BEST BET CATEGORIES (RANKED BY STRATEGY MATCH)</div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+</div>
+
+<!-- ══ STRATEGIES PANE ══ -->
+<div class="pane" id="pane-strategies">
+  <div id="strat-need" class="need-more">
+    Enter at least <strong>5 winning numbers</strong> to see all 12 strategy analyses.
+  </div>
+  <div class="strat-list" id="strat-list"></div>
+</div>
+
+<!-- ══ AI AGENT PANE ══ -->
+<div class="pane" id="pane-ai">
+  <div id="ai-need" class="need-more">
+    Enter at least <strong>8 winning numbers</strong> to activate Q-Learning AI agent.
+  </div>
+  <div id="ai-content" style="display:none">
+    <div class="ai-header">
+      <div class="ai-title">Q-LEARNING REINFORCEMENT AGENT</div>
+      <div class="ai-sub">Learns patterns from your winning number sequence via state-action value estimation. Updates live as you add numbers.</div>
+    </div>
+    <div class="ai-stats-row">
+      <div class="ai-stat">
+        <div class="ai-stat-val gold"   id="ai-states">0</div>
+        <div class="ai-stat-lbl">STATES LEARNED</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-val cyan"   id="ai-epsilon">—</div>
+        <div class="ai-stat-lbl">EXPLORE RATE ε</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-val green"  id="ai-updates">0</div>
+        <div class="ai-stat-lbl">Q UPDATES</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-val purple" id="ai-reward">—</div>
+        <div class="ai-stat-lbl">AVG REWARD</div>
+      </div>
+    </div>
+    <div class="sec-label">AI TOP ACTION PICKS</div>
+    <div id="ai-actions"></div>
+    <div class="sec-label" style="margin-top:10px">CURRENT STATE ENCODING</div>
+    <div class="ai-state-box" id="ai-state-box"></div>
+    <div class="sec-label" style="margin-top:10px">BELLMAN EQUATION</div>
+    <div class="ai-eq">Q(s,a) ← Q(s,a) + α [ r + γ · max Q(s',a') − Q(s,a) ]</div>
+    <div class="ai-eq-legend">α=0.15 learning · γ=0.9 discount · ε decays 0.9→0.05 · reward: +1 hit, −0.1 miss</div>
+  </div>
+</div>
+
+<!-- ══ ANALYSIS PANE ══ -->
+<div class="pane" id="pane-analysis">
+  <div id="anal-need" class="need-more">
+    Enter at least <strong>5 winning numbers</strong> to see statistical analysis.
+  </div>
+  <div id="anal-content" style="display:none">
+    <div class="sec-label">SESSION STATS</div>
+    <div id="sess-stats"></div>
+    <div class="sec-label" style="margin-top:11px">RECENT BIAS (LAST 20 SPINS)</div>
+    <div id="bias-bars"></div>
+    <div class="sec-label" style="margin-top:11px">FREQUENCY HEATMAP</div>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="sec-label" style="margin-top:11px">COLOUR / PARITY / RANGE TREND</div>
+    <div id="trend-section"></div>
+  </div>
+</div>
+
+<!-- ══ HISTORY PANE ══ -->
+<div class="pane" id="pane-history">
+  <div id="hist-need" class="need-more">
+    No numbers recorded yet. Enter winning numbers from the simulator.
+  </div>
+  <div id="hist-content" style="display:none">
+    <div class="hist-controls">
+      <span id="hist-count-label" class="hist-count-lbl"></span>
+      <button id="export-btn" class="export-btn">📥 EXPORT CSV</button>
+    </div>
+    <table class="hist-tbl">
+      <thead>
+        <tr><th>#</th><th>NUM</th><th>COLOUR</th><th>ODD/EVEN</th><th>RANGE</th><th>DOZEN</th><th>COL</th></tr>
+      </thead>
+      <tbody id="hist-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
